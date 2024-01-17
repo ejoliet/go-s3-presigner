@@ -15,8 +15,8 @@ import (
 
 func main() {
     http.HandleFunc("/presign", presignHandler)
-    log.Println("Server is running on port 8080...")
-    log.Fatal(http.ListenAndServe(":8080", nil))
+    log.Println("Server is running on port 8082...")
+    log.Fatal(http.ListenAndServe(":8082", nil))
 }
 
 func presignHandler(w http.ResponseWriter, r *http.Request) {
@@ -50,18 +50,18 @@ func generatePresignedURL(s3Path string) (string, error) {
     log.Println(s3Path)
     //if running in EC2, Go will take credentials from IAM role directly, n need to setup env variable
     // Initialize a session using the default credential provider chain
-    sess, err := session.NewSession()
+    //sess, err := session.NewSession()
     
     // awsAccessKeyID := ""
     // awsSecretAccessKey := ""
     // awsToken := ""
     //for testing locally or using sets of access key and secrets, use the expanded configuration to set individual keys
 
-    // sess, err := session.NewSession(&aws.Config{
-    //     //Region:      aws.String("us-east-1"),
+    sess, err := session.NewSession(&aws.Config{
+    	Region:      aws.String("us-east-1"),
     //     //Credentials: credentials.NewStaticCredentials(awsAccessKeyID, awsSecretAccessKey, awsToken),
     //     LogLevel:    aws.LogLevel(aws.LogDebugWithHTTPBody),
-    // })
+    })
     //aws.String(os.Getenv("AWS_REGION")),
         // Endpoint: aws.String("https://s3.us-east-1.amazonaws.com"),
         // Credentials: credentials.NewStaticCredentials(conf.AWS_ACCESS_KEY_ID, conf.AWS_SECRET_ACCESS_KEY, "")
