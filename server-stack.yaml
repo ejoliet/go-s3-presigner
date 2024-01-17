@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template to deploy Go microservice on EC2.
+
+Resources:
+  EC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      # AvailabilityZone: us-east-1a
+      ImageId: "{{resolve:ssm:/mcp/amis/aml2}}"
+      InstanceType: t2.micro
+      IamInstanceProfile: IPAC_MCP_SSM_Cloudwatch_Plus_Full_S3_Access
+      SubnetId: subnet-00c65c8f8f0ca0f0a
+      SecurityGroupIds:
+        - sg-0218cac30933a8b5f
+      KeyName: ejoliet
+      Monitoring: true
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          yum update -y
+          amazon-linux-extras install golang1.11 -y
+          git clone https://github.com/ejoliet/go-s3-presigner /home/ec2-user/go-app
+          cd /home/ec2-user/go-app
+          go build main.go
+          nohup ./main > webserver-app.log 2>&1 &
+Tags:
+    - Key: "Name"
+      Value: "ejoliet-dev"
+    - Key: "env"
+      Value: "dev"
+    - Key: "team"
+      Value: "cm"
+    - Key: "contact"
+      Value: "Emmanuel Joliet"
+

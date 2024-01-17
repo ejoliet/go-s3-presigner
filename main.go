@@ -9,7 +9,6 @@ import (
 
     "github.com/aws/aws-sdk-go/aws"
     "github.com/aws/aws-sdk-go/aws/session"
-    "github.com/aws/aws-sdk-go/service/s3/s3iface"
     //"github.com/aws/aws-sdk-go/aws/credentials"
     "github.com/aws/aws-sdk-go/service/s3"
 )
@@ -51,19 +50,19 @@ func generatePresignedURL(s3Path string) (string, error) {
     log.Println(s3Path)
     //if running in EC2, Go will take credentials from IAM role directly, n need to setup env variable
     // Initialize a session using the default credential provider chain
-   // sess, err := session.NewSession()
+    sess, err := session.NewSession()
     
-    // awsAccessKeyID := "ASIA3EUXF2S2CKSKZ47A"
-    // awsSecretAccessKey := "rKMabG7swBXjZw2bTDvpUAYJJVgkan9p6zG9uycx"
-    // awsToken := "FwoGZXIvYXdzEBYaDIH6/mDprtrKhRRV9CKrAckiuL1hcC2LQ5unpQRhWZ7QfWHnb23qcxAcAXTqvXEJSx2M1MmWOVDPSBoaRo+wIS51DORbgY+PS+K/UDB48F9iEcXBn0xfHeQPcD+aUSHhwI18+Z2d6h3dgPx3DDwSKXUYzGCrRCVmPzWsstPuAVlxrvV2HmCYrD2hf+V+4J3Pl3AknsApDd6V33eNdSAAAWmpHSbgkLCAosXo4ltmOruLbDngIcj8ALgrbijCzputBjItLtXJG+oK1LIur8MXNU8Ju00gzA+ekRUFBJJJmByHB4DFu+rqKJ+yRMcUmulY"
+    // awsAccessKeyID := ""
+    // awsSecretAccessKey := ""
+    // awsToken := ""
     //for testing locally or using sets of access key and secrets, use the expanded configuration to set individual keys
-    sess, err := session.NewSession(&aws.Config{
-        //Region:      aws.String("us-east-1"),
-        //Credentials: credentials.NewStaticCredentials(awsAccessKeyID, awsSecretAccessKey, awsToken),
-        LogLevel:    aws.LogLevel(aws.LogDebugWithHTTPBody),
-    })
+
+    // sess, err := session.NewSession(&aws.Config{
+    //     //Region:      aws.String("us-east-1"),
+    //     //Credentials: credentials.NewStaticCredentials(awsAccessKeyID, awsSecretAccessKey, awsToken),
+    //     LogLevel:    aws.LogLevel(aws.LogDebugWithHTTPBody),
+    // })
     //aws.String(os.Getenv("AWS_REGION")),
-        //Credentials: credentials.NewStaticCredentials("ASIA3EUXF2S2CKSKZ47A", "rKMabG7swBXjZw2bTDvpUAYJJVgkan9p6zG9uycx", "FwoGZXIvYXdzEBYaDIH6/mDprtrKhRRV9CKrAckiuL1hcC2LQ5unpQRhWZ7QfWHnb23qcxAcAXTqvXEJSx2M1MmWOVDPSBoaRo+wIS51DORbgY+PS+K/UDB48F9iEcXBn0xfHeQPcD+aUSHhwI18+Z2d6h3dgPx3DDwSKXUYzGCrRCVmPzWsstPuAVlxrvV2HmCYrD2hf+V+4J3Pl3AknsApDd6V33eNdSAAAWmpHSbgkLCAosXo4ltmOruLbDngIcj8ALgrbijCzputBjItLtXJG+oK1LIur8MXNU8Ju00gzA+ekRUFBJJJmByHB4DFu+rqKJ+yRMcUmulY")
         // Endpoint: aws.String("https://s3.us-east-1.amazonaws.com"),
         // Credentials: credentials.NewStaticCredentials(conf.AWS_ACCESS_KEY_ID, conf.AWS_SECRET_ACCESS_KEY, "")
     if err != nil {
