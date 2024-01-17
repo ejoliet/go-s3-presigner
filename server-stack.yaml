@@ -17,12 +17,13 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
-          yum update -y
-          amazon-linux-extras install golang1.11 -y
+          sudo yum update -y
+          sudo amazon-linux-extras install golang1.11 -y
           git clone https://github.com/ejoliet/go-s3-presigner /home/ec2-user/go-app
           cd /home/ec2-user/go-app
           go build main.go
-          nohup ./main > webserver-app.log 2>&1 &
+          #nohup ./main > webserver-app.log 2>&1 &
+          pm2 start main --watch --time
 Tags:
     - Key: "Name"
       Value: "ejoliet-dev"
