@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create ICS File</title>
+</head>
+<body>
+    <h2>Create ICS Event</h2>
+    <form action="http://localhost:8080/create_ics" method="post">
+        <label for="title">Event Title:</label><br>
+        <input type="text" id="title" name="title" placeholder="e.g., Team Meeting" required><br>
+
+        <label for="start_date_time">Start Date and Time (YYYY-MM-DDTHH:MM:SS):</label><br>
+        <input type="text" id="start_date_time" name="start_date_time" placeholder="e.g., 2024-01-20T10:00:00" required><br>
+
+        <label for="link">Event Link:</label><br>
+        <input type="text" id="link" name="link" placeholder="e.g., https://example.com/meeting"><br>
+
+        <input type="submit" value="Create ICS File">
+    </form>
+</body>
+</html>
+
