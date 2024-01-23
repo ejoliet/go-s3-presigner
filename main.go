@@ -16,6 +16,7 @@ import (
 func main() {
     http.HandleFunc("/presign", presignHandler)
     log.Println("Server is running on port 8082...")
+    log.Println("Try http://localhost:8082/presign?s3path=...")
     log.Fatal(http.ListenAndServe(":8082", nil))
 }
 
