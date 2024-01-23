@@ -1,19 +1,19 @@
 package main
 
 import (
-    "encoding/json"
-	"log"
+	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
-	"time"
 	"strings"
+	"time"
 )
 
 // Define a struct to match your JSON data
 type EventData struct {
-    Title         string `json:"title"`
-    StartDateTime string `json:"start_date_time"`
-    Link          string `json:"link"`
+	Title         string `json:"title"`
+	StartDateTime string `json:"start_date_time"`
+	Link          string `json:"link"`
 }
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
 }
 
 func createICSHandler(w http.ResponseWriter, r *http.Request) {
-	
+
 	// Add these headers to handle CORS
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
@@ -49,13 +49,13 @@ func createICSHandler(w http.ResponseWriter, r *http.Request) {
 	// startDateTime := r.FormValue("start_date_time")
 	// link := r.FormValue("link")
 
-    // Decode the JSON request body into the EventData struct
-    var eventData EventData	
-    err := json.NewDecoder(r.Body).Decode(&eventData)
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusBadRequest)
-        return
-    }
+	// Decode the JSON request body into the EventData struct
+	var eventData EventData
+	err := json.NewDecoder(r.Body).Decode(&eventData)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 	log.Println(eventData)
 	// Validating input
 	if eventData.Title == "" || eventData.StartDateTime == "" {
@@ -66,7 +66,7 @@ func createICSHandler(w http.ResponseWriter, r *http.Request) {
 	// Parse startDateTime
 	//startTime, err := time.Parse("2006-01-02T15:04:05", eventData.StartDateTime)
 	// Attempt to parse the start date and time
-    startTime, err := parseDateToISO(eventData.StartDateTime)
+	startTime, err := parseDateToISO(eventData.StartDateTime)
 	if err != nil {
 		http.Error(w, "Invalid date format. Use YYYY-MM-DDTHH:MM:SS or Jan 20, 15:04 pm", http.StatusBadRequest)
 		return
@@ -93,24 +93,42 @@ func buildICSContent(title string, startTime time.Time, link string) string {
 
 	return fmt.Sprintf(icsFormat, title, startTime.UTC().Format(layout), endTime.UTC().Format(layout), link)
 }
-// parseDateToISO tries to parse a date string in various formats and returns a time.Time object.
 func parseDateToISO(dateStr string) (time.Time, error) {
-    // Define multiple formats to try
-    formats := []string{
-        "01/02/06 at 03:04pm",
-        "2006-01-02T15:04:05",
-        "Jan 2, 2006 at 15:04 pm",
-    }
+	// Define the layout matching the ISO format
+	const layout = "2006-01-02T15:04:05"
 
-    for _, format := range formats {
-        parsedTime, err := time.Parse(format, dateStr)
-        if err == nil {
-            // Format successfully parsed, return time.Time object
-            return parsedTime, nil
-        }
-    }
+	// Parse the time in given layout assuming it is in PST
+	loc, err := time.LoadLocation("America/Los_Angeles") // PST location
+	if err != nil {
+		return time.Time{}, fmt.Errorf("error loading timezone: %v", err)
+	}
 
-    // None of the formats matched, return zero time and an error
-    return time.Time{}, fmt.Errorf("invalid date format")
+	parsedTime, err := time.ParseInLocation(layout, dateStr, loc)
+	if err != nil {
+		return time.Time{}, fmt.Errorf("invalid date format: %v", err)
+	}
+
+	// The parsedTime is now in PST
+	return parsedTime, nil
 }
 
+// // parseDateToISO tries to parse a date string in various formats and returns a time.Time object.
+// func parseDateToISO(dateStr string) (time.Time, error) {
+//     // Define multiple formats to try
+//     formats := []string{
+//         "01/02/06 at 03:04pm",
+//         "2006-01-02T15:04:05",
+//         "Jan 2, 2006 at 15:04 pm",
+//     }
+
+//     for _, format := range formats {
+//         parsedTime, err := time.Parse(format, dateStr)
+//         if err == nil {
+//             // Format successfully parsed, return time.Time object
+//             return parsedTime, nil
+//         }
+//     }
+
+//     // None of the formats matched, return zero time and an error
+//     return time.Time{}, fmt.Errorf("invalid date format")
+// }
