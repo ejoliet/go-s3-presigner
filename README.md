@@ -26,3 +26,8 @@ curl "http://localhost:8080/presign?s3path={s3path}
 # AWS deployment
 
 See CloudFormation [stack](server-stack.yaml) for deployment.
+
+# Extra - ICS file generated
+
+Added bonus: service to create ICS file and QR to add calendar event on the fly, just with title and time (optional with link).
+See [ics.go](ics.go)
