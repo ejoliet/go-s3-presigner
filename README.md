@@ -26,3 +26,6 @@ curl "http://localhost:8080/presign?s3path={s3path}
 # AWS deployment
 
 See CloudFormation [stack](server-stack.yaml) for deployment.
+```bash
+aws cloudformation create-stack --stack-name S3PresignedURL --template-body file://./server-stack.yaml
+```
