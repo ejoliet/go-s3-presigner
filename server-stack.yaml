@@ -24,13 +24,21 @@ Resources:
           go build main.go
           #nohup ./main > webserver-app.log 2>&1 &
           pm2 start main --watch --time
-Tags:
-    - Key: "Name"
-      Value: "ejoliet-dev"
-    - Key: "env"
-      Value: "dev"
-    - Key: "team"
-      Value: "cm"
-    - Key: "contact"
-      Value: "Emmanuel Joliet"
+      Tags:
+          - Key: "Name"
+            Value: "ejoliet-s3-presigned-url"
+          - Key: "env"
+            Value: "dev"
+          - Key: "team"
+            Value: "cm"
+          - Key: "contact"
+            Value: "Emmanuel Joliet"
+
+Outputs:
+  InstanceId:
+    Description: The Instance ID
+    Value: !Ref MyEC2Instance
+  PublicIP:
+    Description: The Public IP of the Instance
+    Value: !GetAtt MyEC2Instance.PublicIp
 
