@@ -19,9 +19,14 @@ go build main.go
 ./main &
 
 ## URL pattern
-curl "http://localhost:8080/presign?s3path={s3path}
+curl "http://localhost:8082/presign?s3path={s3path}
 
 {s3path} as “bucket_name/key” (see ‘/‘ delimiter)
+
+Example:
+```
+localhost:8082/presign?s3path=ejoliet-dummy/hello.html
+```
 
 # AWS deployment
 
