@@ -19,11 +19,9 @@ Resources:
           #!/bin/bash
           sudo yum update -y
           sudo amazon-linux-extras install golang1.11 -y
-          git clone https://github.com/ejoliet/go-s3-presigner /home/ec2-user/go-app
-          cd /home/ec2-user/go-app
-          go build main.go
-          #nohup ./main > webserver-app.log 2>&1 &
-          pm2 start main --watch --time
+          git clone https://github.com/ejoliet/go-s3-presigner go-app
+          cd go-app          
+          nohup ./main > webserver-app.log 2>&1 &          
       Tags:
           - Key: "Name"
             Value: "ejoliet-s3-presigned-url"
@@ -34,11 +32,22 @@ Resources:
           - Key: "contact"
             Value: "Emmanuel Joliet"
 
+  EC2InstanceElasticIp:
+    Type: AWS::EC2::EIP
+    Properties:      
+      Tags:
+        - Key: Name
+          Value: ejoliet-dev
+
 Outputs:
   InstanceId:
     Description: The Instance ID
-    Value: !Ref MyEC2Instance
+    Value: !Ref EC2Instance
+  
+  ElasticIP:
+    Description: The Elastic IP of the Instance
+    Value: !Ref EC2InstanceElasticIp
+
   PublicIP:
     Description: The Public IP of the Instance
-    Value: !GetAtt MyEC2Instance.PublicIp
-
+    Value: !GetAtt EC2Instance.PublicIp
