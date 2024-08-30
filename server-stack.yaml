@@ -20,7 +20,9 @@ Resources:
           sudo yum update -y
           sudo amazon-linux-extras install golang1.11 -y
           git clone https://github.com/ejoliet/go-s3-presigner go-app
-          cd go-app          
+          cd go-app     
+          touch webserver-app.log      
+          go build main.go
           nohup ./main > webserver-app.log 2>&1 &          
       Tags:
           - Key: "Name"
@@ -39,6 +41,12 @@ Resources:
         - Key: Name
           Value: ejoliet-dev
 
+  EIPAssociation:
+    Type: "AWS::EC2::EIPAssociation"
+    Properties:
+      InstanceId: !Ref EC2Instance
+      EIP: !Ref EC2InstanceElasticIp
+
 Outputs:
   InstanceId:
     Description: The Instance ID
@@ -48,6 +56,6 @@ Outputs:
     Description: The Elastic IP of the Instance
     Value: !Ref EC2InstanceElasticIp
 
-  PublicIP:
-    Description: The Public IP of the Instance
-    Value: !GetAtt EC2Instance.PublicIp
+  # PublicIP:
+  #   Description: The Public IP of the Instance
+  #   Value: !GetAtt EC2Instance.PublicIp
